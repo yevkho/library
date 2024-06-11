@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body {
+    line-height: 1.5;
+    font-family: system-ui;
+}
+
+div.container {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr 1fr;
+}
+
+.dashboard {
+    padding: 10px;
+}
+
+dialog {
+    margin: 30px;
+    padding: 10px;
+    border: solid 1px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 170px);
+    grid-auto-rows: max-content;
+}
+
+.bookCard {
+    border: solid 1px;
+    padding: 5px;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+button {
+    padding: 3px 5px;
+    margin-right: 10px;
+}
