@@ -1,24 +1,11 @@
 
 //1. library array & other variables and DOM selectors
 const myLibrary = [];
-
 const cardSection = document.querySelector(".cards")
 const tableSection = document.querySelector("table")
-
 const newBookButton = document.querySelector("#newBook");
 const dialog = document.querySelector("dialog");
 const closeButton = document.querySelector("#closeButton");
-
-let bookTitle = "";
-let bookAuthor = "";
-let bookPages = "";
-let bookReadStatus = "";
-let newBook = {};
-
-const titleInput = document.querySelector("#title");
-const authorInput = document.querySelector("#author");
-const pagesInput = document.querySelector("#pages");
-const readStatusInput = document.querySelector("#readStatus");
 const createButton = document.querySelector("#createButton");
 
 //2. book constructor
@@ -31,20 +18,14 @@ function Book(title, author, pages, readStatus) {
 
     //5.2 Book constructor prototype - toggle read status buttons
     Book.prototype.toggleRead = function () {
-        if (this.readStatus == "read") {
-            this.readStatus = "not read"
-        } else {
-            this.readStatus = "read"
-        }
+        this.readStatus == "read" ? this.readStatus = "not read" :  this.readStatus = "read";
     };
 
 //3. loop through library and display books
 function clearCards () {
     //clears previous cards
-    const bookCards = document.querySelectorAll(".bookCard");
-    bookCards.forEach((div) => {
-        div.remove();
-    })
+    cardSection.replaceChildren();
+
     //clears previous table rows
     const tableRow = document.querySelectorAll(".tableRow");
     tableRow.forEach((tr) => {
@@ -58,40 +39,50 @@ function displayBooks () {
     //display library array with cards and table
     myLibrary.forEach(function (item, index) {
         //display each book in a separate card
-        let newBookCard = document.createElement("div");
+        const newBookCard = document.createElement("div");
         newBookCard.classList.add("bookCard");
-        let cardTitleDiv = document.createElement("div");
-        cardTitleDiv.textContent = `Book ${index+1}`;
+
+        const cardTitleDiv = document.createElement("div");
+        cardTitleDiv.innerHTML = `<b>Book ${index+1}</b>`;
         newBookCard.appendChild(cardTitleDiv);
-        let bookTitleDiv = document.createElement("div");
+
+        const bookTitleDiv = document.createElement("div");
         bookTitleDiv.textContent = `Title: ${item.title}`;
         newBookCard.appendChild(bookTitleDiv);
-        let bookAuthorDiv = document.createElement("div");
+
+        const bookAuthorDiv = document.createElement("div");
         bookAuthorDiv.textContent = `Author: ${item.author}`;
         newBookCard.appendChild(bookAuthorDiv);
-        let bookPagesDiv = document.createElement("div");
+
+        const bookPagesDiv = document.createElement("div");
         bookPagesDiv.textContent = `Pages: ${item.pages}`;
-        newBookCard.appendChild(bookTitleDiv);
-        let bookReadStatusDiv = document.createElement("div");
+        newBookCard.appendChild(bookPagesDiv);
+
+        const bookReadStatusDiv = document.createElement("div");
         bookReadStatusDiv.textContent = `Read status: ${item.readStatus}`;
         newBookCard.appendChild(bookReadStatusDiv);
+
         //add 'remove' button
-        let removeButton = document.createElement("button")
+        const removeButton = document.createElement("button")
         removeButton.textContent = "remove";
         removeButton.setAttribute("id","remove");
         removeButton.setAttribute("data-index",`${index}`);
         newBookCard.appendChild(removeButton);
-        //add 'read' button
-        let readButton = document.createElement("button")
-        readButton.textContent = "read";
-        readButton.setAttribute("id","read");
-        readButton.setAttribute("data-index",`${index}`);
+
+        //add and set 'read' button
+        const readButton = document.createElement("button")
+        readButton.addEventListener('click', () => {
+            myLibrary[index].toggleRead();
+            displayBooks ();
+        })
+        readButton.textContent = myLibrary[index].readStatus
         newBookCard.appendChild(readButton);
+
         //append card to display
         cardSection.appendChild(newBookCard)
-        //set event listeners on 'repeat' and 'remove' buttons
+
+        //set event listeners on 'remove' buttons
         setRemoveButtons ();
-        setToggleButtons ();
 
         //display each book in table row
         let newTableRow = document.createElement("tr");
@@ -127,12 +118,18 @@ closeButton.addEventListener('click', (e) => {
 
 createButton.addEventListener('click', (e) => {
     //take user form input
-    bookTitle = titleInput.value;
-    bookAuthor = authorInput.value;
-    bookPages = pagesInput.value;
-    bookReadStatus = readStatusInput.value;
+    const bookTitle = document.querySelector("#title").value;
+    const bookAuthor = document.querySelector("#author").value;
+    const bookPages = document.querySelector("#pages").value;
+    const bookReadStatus = document.querySelector("#readStatus").value;
+
+    //exit function if one of title, author or pages is missing 
+    if (!bookTitle || !bookAuthor || !bookPages) {
+        return;
+    }
+
     //create new book based on user form input
-    newBook = new Book (bookTitle, bookAuthor, bookPages, bookReadStatus);
+    const newBook = new Book (bookTitle, bookAuthor, bookPages, bookReadStatus);
     //push new book to library array
     myLibrary.push(newBook);
     //display library array 
@@ -144,25 +141,12 @@ function setRemoveButtons () {
     let removeButtons = document.querySelectorAll("#remove[data-index]");
     removeButtons.forEach((item) => {
         if (!item.dataset.listener) {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
                 myLibrary.splice(item.dataset.index, 1);
+                // myLibrary.splice(e.target.dataset.index, 1);
                 displayBooks ();
             })
             item.setAttribute('data-listener', 'true');
-        }
-    })
-}
-
-//5.2 set 'toggle read status' buttons & reset feature
-function setToggleButtons () {
-    const toggleButtons = document.querySelectorAll("#read");
-    toggleButtons.forEach((item) => {
-        if (!item.dataset.read) {
-            item.addEventListener('click', () => {
-                myLibrary[item.dataset.index].toggleRead();
-                displayBooks ();
-            })
-            item.setAttribute('data-read', 'true');
         }
     })
 }
