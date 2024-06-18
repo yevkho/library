@@ -9,17 +9,30 @@ const closeButton = document.querySelector("#closeButton");
 const createButton = document.querySelector("#createButton");
 
 //2. book constructor
-function Book(title, author, pages, readStatus) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.readStatus = readStatus;
+class Book {
+    constructor (title, author, pages, readStatus) { //gets invoked whith 'New' initialization
+        //instance properties and methods
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.readStatus = readStatus;
+    }
+    //instance (prototype) methods (via storing in class prototype)
+    toggleRead() {
+        this.readStatus == "read" ? this.readStatus = "not read" :  this.readStatus = "read";
+    }
 }
 
-    //5.2 Book constructor prototype - toggle read status buttons
-    Book.prototype.toggleRead = function () {
-        this.readStatus == "read" ? this.readStatus = "not read" :  this.readStatus = "read";
-    };
+// function Book(title, author, pages, readStatus) {
+//     this.title = title;
+//     this.author = author;
+//     this.pages = pages;
+//     this.readStatus = readStatus;
+// }
+//     //5.2 Book constructor prototype - toggle read status buttons
+//     Book.prototype.toggleRead = function () {
+//         this.readStatus == "read" ? this.readStatus = "not read" :  this.readStatus = "read";
+//     };
 
 //3. loop through library and display books
 function clearCards () {
